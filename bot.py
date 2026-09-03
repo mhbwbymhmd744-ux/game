@@ -76,7 +76,7 @@ BIOMES = {
             {'id': 'piranha', 'name': 'ماهی پیرانای خون‌خوار 🐟', 'hp': 30, 'atk': 8, 'xp': 40, 'gold': 20, 'tier': 'معمولی', 'loot': ['rusty_dagger', 'health_potion']},
             {'id': 'eel', 'name': 'مارماهی برقی ⚡', 'hp': 45, 'atk': 12, 'xp': 60, 'gold': 30, 'tier': 'معمولی', 'loot': ['coral_trident']}
         ],
-        'boss': {'id': 'kraken_lord', 'name': '🐙 علیرضا سلیمانی', 'hp': 250, 'atk': 35, 'xp': 400, 'gold': 300, 'tier': 'حماسی', 'loot': ['leviathan_axe']}
+        'boss': {'id': 'kraken_lord', 'name': '🐙 کراکن وحشت', 'hp': 250, 'atk': 35, 'xp': 400, 'gold': 300, 'tier': 'حماسی', 'loot': ['leviathan_axe']}
     },
     'forest': {
         'name': '🌲 جنگل زمزمه‌های تاریک', 'min_lvl': 5,
