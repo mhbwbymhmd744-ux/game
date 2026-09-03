@@ -1,0 +1,242 @@
+{
+    "5011013105": {
+        "name": "ZARVAN",
+        "lvl": 9,
+        "xp": 1884,
+        "xp_needed": 2553,
+        "base_max_hp": 146,
+        "base_max_energy": 140,
+        "base_atk": 25,
+        "base_def": 14,
+        "gold": 5262,
+        "inventory": {
+            "health_potion": 0,
+            "rusty_dagger": 1,
+            "wooden_chest": 0,
+            "swift_boots": 1,
+            "iron_chest": 1,
+            "iron_mace": 1,
+            "leather_cap": 1,
+            "cloth_vest": 1,
+            "worn_boots": 1,
+            "golden_chest": 0,
+            "shadow_robe": 1,
+            "coral_trident": 1,
+            "leviathan_axe": 3,
+            "spider_shield_armor": 2,
+            "magma_plate": 2,
+            "sand_blade": 0,
+            "ice_crown": 1,
+            "spirit_root_boots": 1,
+            "mohabbat_e_zurvan": 1
+        },
+        "equipped": {
+            "weapon": "rusty_dagger",
+            "armor": "cloth_vest",
+            "helmet": "leather_cap",
+            "boots": "spirit_root_boots"
+        },
+        "state": "TOWN",
+        "hp": 176,
+        "energy": 140,
+        "defending": false,
+        "enemy": {
+            "id": "forest_guardian",
+            "name": "🌿 ارواح کهن درخت مقدس",
+            "hp": 106,
+            "atk": 40,
+            "xp": 550,
+            "gold": 450,
+            "tier": "افسانه‌ای",
+            "loot": [
+                "iron_chest",
+                "spirit_root_boots"
+            ],
+            "is_boss": true,
+            "bleed": 0,
+            "stunned": false
+        },
+        "cooldowns": {
+            "crit": 0,
+            "bleed": 0,
+            "stun": 0,
+            "lifesteal": 0
+        },
+        "used_codes": [
+            "MMM45",
+            "KIR"
+        ]
+    },
+    "7368375095": {
+        "name": "AZRAEL",
+        "lvl": 13,
+        "xp": 4800,
+        "xp_needed": 9704,
+        "base_max_hp": 180,
+        "base_max_energy": 150,
+        "base_atk": 36,
+        "base_def": 23,
+        "gold": 27765,
+        "inventory": {
+            "health_potion": 0,
+            "rusty_dagger": 0,
+            "coral_trident": 0,
+            "leviathan_axe": 1,
+            "cloth_vest": 1,
+            "ice_crown": 1,
+            "leather_cap": 1,
+            "worn_boots": 2,
+            "iron_chest": 2,
+            "golden_chest": 20,
+            "wooden_chest": 0,
+            "magma_plate": 1,
+            "spirit_root_boots": 1,
+            "spider_shield_armor": 2,
+            "sand_blade": 1
+        },
+        "equipped": {
+            "weapon": "sand_blade",
+            "armor": "cloth_vest",
+            "helmet": "ice_crown",
+            "boots": "spirit_root_boots"
+        },
+        "state": "TOWN",
+        "hp": 230,
+        "energy": 150,
+        "defending": false,
+        "enemy": {
+            "id": "bandit",
+            "name": "راهزن فراری دشت 🗡",
+            "hp": 90,
+            "atk": 22,
+            "xp": 140,
+            "gold": 75,
+            "tier": "کمیاب",
+            "loot": [
+                "worn_boots"
+            ],
+            "is_boss": false,
+            "bleed": 0,
+            "stunned": false
+        },
+        "cooldowns": {
+            "crit": 0,
+            "bleed": 0,
+            "stun": 0,
+            "lifesteal": 0
+        }
+    },
+    "6831307345": {
+        "name": "TERMINATOR",
+        "lvl": 6,
+        "xp": 453,
+        "xp_needed": 757,
+        "base_max_hp": 120,
+        "base_max_energy": 125,
+        "base_atk": 21,
+        "base_def": 13,
+        "gold": 1082,
+        "inventory": {
+            "health_potion": 0,
+            "rusty_dagger": 4,
+            "coral_trident": 9,
+            "spirit_root_boots": 1,
+            "leviathan_axe": 1
+        },
+        "equipped": {
+            "weapon": "coral_trident",
+            "armor": null,
+            "helmet": null,
+            "boots": null
+        },
+        "state": "TOWN",
+        "hp": 130,
+        "energy": 125,
+        "defending": false,
+        "enemy": {
+            "id": "kraken_lord",
+            "name": "🐙 علیرضا سلیمانی",
+            "hp": -48,
+            "atk": 35,
+            "xp": 400,
+            "gold": 300,
+            "tier": "حماسی",
+            "loot": [
+                "leviathan_axe"
+            ],
+            "is_boss": true,
+            "bleed": 0,
+            "stunned": false
+        },
+        "cooldowns": {
+            "crit": 2,
+            "bleed": 0,
+            "stun": 0,
+            "lifesteal": 0
+        }
+    },
+    "8422555651": {
+        "name": "ABLE",
+        "lvl": 1,
+        "xp": 0,
+        "xp_needed": 100,
+        "gold": 150,
+        "inventory": {
+            "health_potion": 2
+        },
+        "equipped": {},
+        "base_max_hp": 60,
+        "base_max_energy": 100,
+        "base_atk": 6,
+        "base_def": 3,
+        "hp": 60,
+        "energy": 100,
+        "defending": false,
+        "used_codes": [
+            "KIR"
+        ]
+    },
+    "943378600": {
+        "name": "αѵօօl 𒉭‌ 𝙽𝙴𝙼𝙴𝚂𝙸𝚂 ᯤ",
+        "lvl": 1,
+        "xp": 0,
+        "xp_needed": 100,
+        "gold": 150,
+        "inventory": {
+            "health_potion": 2
+        },
+        "equipped": {},
+        "base_max_hp": 60,
+        "base_max_energy": 100,
+        "base_atk": 6,
+        "base_def": 3,
+        "hp": 60,
+        "energy": 100,
+        "defending": false,
+        "used_codes": [
+            "KIR"
+        ],
+        "enemy": {
+            "id": "eel",
+            "name": "مارماهی برقی ⚡",
+            "hp": 13,
+            "atk": 12,
+            "xp": 60,
+            "gold": 30,
+            "tier": "معمولی",
+            "loot": [
+                "coral_trident"
+            ],
+            "is_boss": false,
+            "bleed": 0,
+            "stunned": false
+        },
+        "state": "TOWN",
+        "cooldowns": {
+            "crit": 0,
+            "bleed": 0,
+            "stun": 0,
+            "lifesteal": 0
+        }
+    }
+}
