@@ -43,7 +43,7 @@ ITEMS = {
         'desc': 'شمشیری جاودانه آغشته به نور و مهر بیکران زروان، بخشاینده قدرت مطلق.'
     },
     
-    'tof_e_abol': {'name': '🧪 تف ابول', 'type': 'helmet', 'rarity': 'افسانه ای', 'atk': 70, 'def': 25, 'hp': -8, 'lvl_req': 2, 'price': 143, 'desc': 'ناخواسته به سرو صورت طرف مقابل پرتاب میشه.'},									
+    'tof_e_abol': {'name': '🧪 تف ابول', 'type': 'helmet', 'rarity': 'افسانه ای', 'atk': 70, 'def': 25, 'hp': -8, 'lvl_req': 2, 'price': 143, 'desc': 'ناخواسته به سرو صورت طرف مقابل پرتاب میشه.'},                                    
     'health_potion': {'name': '🧪 معجون سلامتی', 'type': 'consumable', 'rarity': 'معمولی', 'heal': 50, 'price': 20, 'desc': 'زخم‌ها را التیام می‌بخشد.'},
     'wooden_chest': {'name': '📦 صندوق چوبی', 'type': 'chest', 'rarity': 'معمولی', 'price': 150, 'desc': 'صندوقی معمولی با لوت پایه.'},
     'iron_chest': {'name': '🧰 صندوق آهنی سنگین', 'type': 'chest', 'rarity': 'کمیاب', 'price': 400, 'desc': 'دارای تجهیزات باارزش‌تر.'},
@@ -185,7 +185,6 @@ def roll_chest_item(chest_id):
     return random.choice(pool)
 
 async def show_town(query_or_update, context, user_id, is_new=False, is_text_msg=False):
-    # ساخت خودکار کاربر در صورت عدم وجود (جلوگیری از KeyError)
     if user_id not in players:
         user_obj = None
         if hasattr(query_or_update, 'from_user') and query_or_update.from_user:
@@ -383,7 +382,21 @@ async def start_combat(query, player, biome_key, is_boss=False):
            f"🖤 جان دشمن: {player['enemy']['hp']}"
            
     keyboard = await get_combat_keyboard(player)
-    await query.edit_message_text(text=text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode='Markdown')
+    
+    # بررسی ارسال عکس مخصوص باس کراکن وحشت با File ID کامل
+    if is_boss and enemy['id'] == 'kraken_lord':
+        try:
+            await query.message.delete()
+        except:
+            pass
+        await query.message.reply_photo(
+            photo="AgACAgQAAxkBAAEiR3dqmfu2e5mh4iavSMZOlwYwrCIOJAAC7hBrG7Yj0VD9RYmitzNBSQEAAwIAA3cAAz0E",
+            caption=text,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode='Markdown'
+        )
+    else:
+        await query.edit_message_text(text=text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode='Markdown')
 
 async def redeem_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
@@ -425,7 +438,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer() 
     user_id = query.from_user.id
     
-    # اگر کاربر در دیتابیس نبود، تابع show_town خودش او را می‌سازد پس نیازی به ریترن کردن ارور نیست
     if user_id not in players:
         await show_town(query, context, user_id)
         return
@@ -603,65 +615,101 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if player['inventory'].get('health_potion', 0) > 0:
                 player['hp'] = min(stats['max_hp'], player['hp'] + 50)
                 player['inventory']['health_potion'] -= 1
-                action_log = "🧪 معجون مصرف شد."
-            else: return await query.answer("معجون نداری!", show_alert=True)
+                action_log = "🧪 معجون سلامتی نوشیدید (+50 جان)."
+            else:
+                return await query.answer("معجون سلامتی ندارید!", show_alert=True)
 
         elif data == "pve_flee":
             player['state'] = 'TOWN'
-            await query.answer("🏃 فرار کردی!", show_alert=True)
+            await query.answer("🏃 از نبرد فرار کردید!", show_alert=True)
             return await show_town(query, context, user_id)
 
-        if enemy['hp'] <= 0:
-            player['state'] = 'TOWN'
-            player['xp'] = player.get('xp', 0) + enemy['xp']
-            player['gold'] = player.get('gold', 0) + enemy['gold']
-            msg = f"🏆 **پیروزی!**\n✨ +{enemy['xp']} تجربه | 💰 +{enemy['gold']} طلا"
-            
-            if 'loot' in enemy and enemy['loot']:
-                drop_item = random.choice(enemy['loot'])
-                if drop_item in ITEMS:
-                    add_item(player, drop_item)
-                    msg += f"\n🎁 لوط ویژه دریافتی: **{ITEMS[drop_item]['name']}**"
-
-            if player['xp'] >= player.get('xp_needed', 100) and player.get('lvl', 1) < MAX_LEVEL:
-                player['lvl'] = player.get('lvl', 1) + 1
-                player['xp'] = 0
-                player['xp_needed'] = int(player.get('xp_needed', 100) * 1.3)
-                msg += f"\n⭐ **سطح شما افزایش یافت! سطح جدید: {player['lvl']}**"
-            
-            save_game()
-            return await query.edit_message_text(text=msg, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 بازگشت به شهر", callback_data="town")]]), parse_mode='Markdown')
-
-        if enemy.get('stunned', False):
-            enemy['stunned'] = False
-            enemy_action_log = "💫 دشمن گیج است و نمی‌تواند حمله کند!"
-        else:
-            e_atk = enemy['atk']
-            if player.get('defending', False):
-                e_atk = max(1, int(e_atk - p_def * 1.5))
-                player['defending'] = False
+        # نوبت دشمن
+        enemy_log = ""
+        if enemy['hp'] > 0:
+            if enemy.get('stunned', False):
+                enemy['stunned'] = False
+                enemy_log = "\n💫 دشمن در گیجی به سر می‌برد و نتوانست حمله کند!"
             else:
-                e_atk = max(1, int(e_atk - p_def))
+                e_dmg = random.randint(int(enemy['atk']*0.8), int(enemy['atk']*1.2))
+                if player.get('defending', False):
+                    e_dmg = max(2, e_dmg - p_def * 2)
+                    player['defending'] = False
+                    enemy_log = f"\n🛡 گارد ضربه را دفع کرد! دشمن {e_dmg} آسیب زد."
+                else:
+                    e_dmg = max(1, e_dmg - p_def)
+                    player['hp'] -= e_dmg
+                    enemy_log = f"\n⚔️ دشمن متقابلاً {e_dmg} آسیب به شما وارد کرد."
+
+        # بررسی پیروزی یا شکست
+        if enemy['hp'] <= 0:
+            xp_gain = enemy['xp']
+            gold_gain = enemy['gold']
+            player['xp'] += xp_gain
+            player['gold'] += gold_gain
             
-            player['hp'] -= e_atk
-            enemy_action_log = f"ضربات دشمن: {e_atk} آسیب به شما."
+            drop_msg = ""
+            if 'loot' in enemy and enemy['loot']:
+                dropped_item = random.choice(enemy['loot'])
+                if dropped_item in ITEMS:
+                    add_item(player, dropped_item)
+                    drop_msg = f"\n🎁 آیتم دریافتی: {ITEMS[dropped_item]['name']}"
 
-        if player['hp'] <= 0:
+            # لول آپ
+            lvl_up_msg = ""
+            while player['xp'] >= player['xp_needed'] and player['lvl'] < MAX_LEVEL:
+                player['xp'] -= player['xp_needed']
+                player['lvl'] += 1
+                player['xp_needed'] = int(player['xp_needed'] * 1.3)
+                player['base_max_hp'] += 15
+                player['base_atk'] += 3
+                player['base_def'] += 2
+                lvl_up_msg = f"\n\n⭐ **تبریک! لول شما به {player['lvl']} افزایش یافت!**"
+
             player['state'] = 'TOWN'
-            save_game()
-            return await query.edit_message_text(text="💀 **شکست خوردید!**\nجان شما به پایان رسید و با حالی نزار به شهر بازگشتید.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 بازگشت به شهر", callback_data="town")]]), parse_mode='Markdown')
+            win_text = f"🎉 **پیروزی بزرگ!**\nشما `{enemy['name']}` را شکست دادید!\n\n✨ تجربه: +{xp_gain}\n💰 طلا: +{gold_gain}{drop_msg}{lvl_up_msg}"
+            
+            try:
+                await query.message.delete()
+            except:
+                pass
+            await context.bot.send_message(chat_id=user_id, text=win_text, parse_mode='Markdown')
+            return await show_town(query, context, user_id, is_new=True)
 
-        text = f"⚔️ **میدان نبرد**\n{action_log}\n{enemy_action_log}\n\n" \
-               f"❤️ شما: {player['hp']}/{stats['max_hp']} | ⚡ انرژی: {player['energy']}/{stats['max_energy']}\n" \
-               f"🖤 جان دشمن ({enemy['name']}): {enemy['hp']}"
-        await query.edit_message_text(text=text, reply_markup=InlineKeyboardMarkup(await get_combat_keyboard(player)), parse_mode='Markdown')
+        elif player['hp'] <= 0:
+            player['state'] = 'TOWN'
+            loss_text = f"💀 **شکست خوردید!**\nتوسط `{enemy['name']}` از پا درآمدید و با حالی نزار به شهر برگشتید."
+            try:
+                await query.message.delete()
+            except:
+                pass
+            await context.bot.send_message(chat_id=user_id, text=loss_text, parse_mode='Markdown')
+            return await show_town(query, context, user_id, is_new=True)
+
+        # به‌روزرسانی صفحه نبرد
+        text = f"⚔️ نبرد با **{enemy['name']}**\n\n" \
+               f"📝 آخرین حرکت: {action_log}{enemy_log}\n\n" \
+               f"❤️ جان شما: {player['hp']}/{stats['max_hp']} | ⚡ انرژی: {player['energy']}/{stats['max_energy']}\n" \
+               f"🖤 جان دشمن: {enemy['hp']}"
+
+        keyboard = await get_combat_keyboard(player)
+        try:
+            await query.edit_message_text(text=text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode='Markdown')
+        except:
+            pass
+
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.message.from_user.id
+    await show_town(update, context, user_id, is_new=True, is_text_msg=True)
 
 def main():
     app = Application.builder().token(TOKEN).build()
-    app.add_handler(CommandHandler("start", lambda u, c: show_town(u, c, u.message.from_user.id, is_new=True, is_text_msg=True)))
+    
+    app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("gift", redeem_command))
     app.add_handler(CallbackQueryHandler(button_handler))
-    print("🤖 ربات با موفقیت روشن شد و در حال اجراست...")
+    
+    print("Bot is running...")
     app.run_polling()
 
 if __name__ == '__main__':
