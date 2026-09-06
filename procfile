@@ -1,1 +1,1 @@
-worker: python rpg_bot.py
+worker: python time.py
